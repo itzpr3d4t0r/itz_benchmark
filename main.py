@@ -1,39 +1,23 @@
-from data_utils import plot_tests, run_tests, print_info
-
-print_info()
+from data_utils import run_suite
 
 # ===========| CONFIG |===========
-DO_TEST = True
+RUN_BENCHMARK = True
+PLOT = True
 
-
-def test_setup(curr_size: int, g: dict):
-    pass
-
-
-tests_config = {
-    'tests': [],
-    'tests_setup': test_setup,
-    'max_size': 1000,
-    'reps': 100,
-    'num': 1,
-}
-
-kwargs_dict = {}
+# Import your current config here:
+from configs.empty_configuration import configuration_data
 
 plot_config = {
-    'title': 'MISSING TITLE',
-    'tests': [],
-    'mode': 'MIN',
-    'limit_to_range': tests_config['max_size'],
-    'scatter': True,
-    'errbars': False,
-    'compare_list': [],
-    'x_label': 'MISSING X LABEL',
+    'title': 'MISSING TITLE',      # Title for the plot
+    'tests': [],                   # List of test results to plot
+    'mode': 'MIN',                 # Mode for plotting (e.g., MIN for minimum values)
+    'limit_to_range': -1,          # Limit for the x-axis range
+    'scatter': True,               # Whether to use a scatter plot
+    'errbars': False,              # Whether to show error bars on the plot
+    'compare_list': [],            # List of test cases to compare
+    'x_label': 'MISSING X LABEL',  # Label for the x-axis
 }
 
 # ===========| END OF CONFIG |===========
 
-if DO_TEST:
-    run_tests(**tests_config, **kwargs_dict)
-
-plot_tests(**plot_config)
+run_suite(RUN_BENCHMARK, configuration_data, PLOT, plot_config)

@@ -21,12 +21,12 @@ class Plotter:
     }
 
     def __init__(
-            self,
-            title: str,
-            tests: List[Tuple[str, str]],
-            mode: Literal["MIN", "MAX", "MEAN", "MEDIAN", "GEOMEAN"] = "MIN",
-            limit_to_range: int = -1,
-            x_label: str = "NULL",
+        self,
+        title: str,
+        tests: List[Tuple[str, str]],
+        mode: Literal["MIN", "MAX", "MEAN", "MEDIAN", "GEOMEAN"] = "MIN",
+        limit_to_range: int = -1,
+        x_label: str = "NULL",
     ):
         plt.style.use("dark_background")
         self.title = title
@@ -56,9 +56,11 @@ class Plotter:
 
     def _extract_timings(self, data: dict) -> List[float]:
         """Extract and filter the timings from the data."""
-        return [self.mode_func(dp) for dp in data["data"][:self.limit_to_range]]
+        return [self.mode_func(dp) for dp in data["data"][: self.limit_to_range]]
 
-    def _print_statistics(self, file_name: str, data: dict, timings: List[float]) -> None:
+    def _print_statistics(
+        self, file_name: str, data: dict, timings: List[float]
+    ) -> None:
         """Print basic statistics about the timings."""
         print(f"=== {file_name} ===")
         print(f"Total: {sum(sum(dp) for dp in data['data'])}")
@@ -66,8 +68,9 @@ class Plotter:
         print(f"Median: {median(timings):.6f}")
         print(f"Stdev: {stdev(timings):.6f}\n")
 
-    def _plot_timings(self, timings: List[float], label: str, color: str, scatter: bool,
-                      errbars: bool) -> None:
+    def _plot_timings(
+        self, timings: List[float], label: str, color: str, scatter: bool, errbars: bool
+    ) -> None:
         """Plot the timings on the graph."""
         if scatter:
             plt.scatter(range(len(timings)), timings, color=color, label=label, s=0.5)
@@ -92,8 +95,9 @@ class Plotter:
         plt.ylabel("Time (s)")
         plt.show()
 
-    def compare(self, indices: List[Tuple[int, int]], c1: str = "white",
-                c2: str = "lime") -> None:
+    def compare(
+        self, indices: List[Tuple[int, int]], c1: str = "white", c2: str = "lime"
+    ) -> None:
         num_plots = len(indices)
         for idx, (i1, i2) in enumerate(indices):
             data_1 = self._load_data(self.tests[i1][0])
@@ -105,20 +109,22 @@ class Plotter:
         plt.show()
 
     def _plot_comparison(
-            self,
-            timings_1: List[float],
-            timings_2: List[float],
-            idx: int,
-            num_plots: int,
-            c1: str,
-            c2: str
+        self,
+        timings_1: List[float],
+        timings_2: List[float],
+        idx: int,
+        num_plots: int,
+        c1: str,
+        c2: str,
     ) -> None:
         """Plot a comparison between two sets of timings."""
         plt.subplot(num_plots, 2, idx * 2 + 1)
-        plt.scatter(range(len(timings_1)), timings_1, color=c1, label=self.tests[idx][0],
-                    s=0.5)
-        plt.scatter(range(len(timings_2)), timings_2, color=c2, label=self.tests[idx][1],
-                    s=0.5)
+        plt.scatter(
+            range(len(timings_1)), timings_1, color=c1, label=self.tests[idx][0], s=0.5
+        )
+        plt.scatter(
+            range(len(timings_2)), timings_2, color=c2, label=self.tests[idx][1], s=0.5
+        )
         plt.legend()
         if idx == 0:
             plt.title("Timings")
@@ -127,7 +133,9 @@ class Plotter:
             plt.xlabel(self.x_label)
 
         plt.subplot(num_plots, 2, idx * 2 + 2)
-        comparative_data = [100 * ((t1 / t2) - 1) for t1, t2 in zip(timings_1, timings_2)]
+        comparative_data = [
+            100 * ((t1 / t2) - 1) for t1, t2 in zip(timings_1, timings_2)
+        ]
         plt.scatter(range(len(comparative_data)), comparative_data, color="red", s=1)
         plt.axhline(0, color="violet", linewidth=2)
         if idx == 0:
@@ -138,12 +146,12 @@ class Plotter:
 
 class Evaluator:
     def __init__(
-            self,
-            tests: List[Tuple[str, str]],
-            tests_setup: Callable[[int, dict], None],
-            max_size: int = 1000,
-            reps: int = 30,
-            num: int = 1,
+        self,
+        tests: List[Tuple[str, str]],
+        tests_setup: Callable[[int, dict], None],
+        max_size: int = 1000,
+        reps: int = 30,
+        num: int = 1,
     ):
         self.tests = tests
         self.tests_setup = tests_setup
@@ -158,7 +166,11 @@ class Evaluator:
 
     def _run_single_test(self, test_name: str, statement: str) -> None:
         """Run a single test and store the results."""
-        data = {"title": test_name, "settings": self._get_settings(statement), "data": []}
+        data = {
+            "title": test_name,
+            "settings": self._get_settings(statement),
+            "data": [],
+        }
         print(f"\n========| {test_name.upper()} |========")
         progress_bar = tqdm(total=self.max_size, ncols=100, colour="green")
 
@@ -204,17 +216,19 @@ class Evaluator:
 
 
 def plot_tests(
-        title: str,
-        tests: List[Tuple[str, str]],
-        mode: Literal["MIN", "MAX", "MEAN", "MEDIAN", "GEOMEAN"] = "MIN",
-        limit_to_range: int = -1,
-        scatter: bool = False,
-        errbars: bool = False,
-        compare_list: Optional[List[Tuple[int, int]]] = None,
-        x_label: str = "NULL",
+    title: str,
+    tests: List[Tuple[str, str]],
+    mode: Literal["MIN", "MAX", "MEAN", "MEDIAN", "GEOMEAN"] = "MIN",
+    limit_to_range: int = -1,
+    scatter: bool = False,
+    errbars: bool = False,
+    compare_list: Optional[List[Tuple[int, int]]] = None,
+    x_label: str = "NULL",
 ) -> None:
     if not tests:
-        print("Didn't plot any test since there weren't any...")
+        print(
+            "Nothing to plot... (Have you filled the 'tests' field correctly in your plot configuration?)"
+        )
         return
 
     plotter = Plotter(title, tests, mode, limit_to_range, x_label)
@@ -224,15 +238,17 @@ def plot_tests(
 
 
 def run_tests(
-        tests: List[Tuple[str, str]],
-        tests_setup: Callable[[int, dict], None],
-        max_size: int = 1000,
-        reps: int = 30,
-        num: int = 1,
-        **kwargs,
+    tests: List[Tuple[str, str]],
+    tests_setup: Callable[[int, dict], None],
+    max_size: int = 1000,
+    reps: int = 30,
+    num: int = 1,
+    **kwargs,
 ) -> None:
     if not tests:
-        print("Didn't run any test since there weren't any...")
+        print(
+            "Nothing to benchmark... (Have you filled the 'tests' field correctly in your configuration?)"
+        )
         return
 
     with Evaluator(tests, tests_setup, max_size, reps, num) as evaluator:
@@ -243,7 +259,23 @@ def run_tests(
 
 def print_info():
     print("Hello and welcome to ItzBenchmark!\n")
-    print("=====| Available Data Filters |=====")
-    for filter_name in Plotter.filters_map.keys():
-        print(f"{filter_name} |", end=" ")
-    print("\n")
+
+
+def package_configuration(
+    tests_config: dict, environment_kwargs: dict, globals: dict
+) -> dict:
+    environment_kwargs.update(globals)
+    return {"config": tests_config, "e_kwargs": environment_kwargs}
+
+
+def run_suite(run_bench: bool, packaged_data: dict, run_plot: bool, plot_config: dict):
+    print_info()
+
+    if run_bench:
+        run_tests(**packaged_data["config"], **packaged_data["e_kwargs"])
+    if run_plot:
+        print("\n=====| Available Data Filters |=====")
+        for filter_name in Plotter.filters_map.keys():
+            print(f"{filter_name} |", end=" ")
+        print(f"(Selected: {plot_config['mode']})")
+        plot_tests(**plot_config)
