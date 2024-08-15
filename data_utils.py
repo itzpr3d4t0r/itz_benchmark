@@ -105,13 +105,17 @@ class Plotter:
             if data_1 and data_2:
                 timings_1 = self._extract_timings(data_1)
                 timings_2 = self._extract_timings(data_2)
-                self._plot_comparison(timings_1, timings_2, idx, num_plots, c1, c2)
+                self._plot_comparison(
+                    timings_1, timings_2, i1, i2, idx, num_plots, c1, c2
+                )
         plt.show()
 
     def _plot_comparison(
         self,
         timings_1: List[float],
         timings_2: List[float],
+        i1: int,
+        i2: int,
         idx: int,
         num_plots: int,
         c1: str,
@@ -120,10 +124,10 @@ class Plotter:
         """Plot a comparison between two sets of timings."""
         plt.subplot(num_plots, 2, idx * 2 + 1)
         plt.scatter(
-            range(len(timings_1)), timings_1, color=c1, label=self.tests[idx][0], s=0.5
+            range(len(timings_1)), timings_1, color=c1, label=self.tests[i1][0], s=0.5
         )
         plt.scatter(
-            range(len(timings_2)), timings_2, color=c2, label=self.tests[idx][1], s=0.5
+            range(len(timings_2)), timings_2, color=c2, label=self.tests[i2][0], s=0.5
         )
         plt.legend()
         if idx == 0:
